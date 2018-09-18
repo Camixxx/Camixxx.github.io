@@ -1,5 +1,5 @@
 ---
-title: Matlab问题整理-1
+title: Matlab问题整理
 categories:
 - Math
 tags:
