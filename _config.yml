@@ -70,15 +70,16 @@ per_page: 10
 pagination_dir: page
 
 # Extensions https://hexo.io/plugins/
- Plugins: 
- - hexo-server
- - any-other-plugin
+# Plugins: 
+# - hexo-server
+# - any-other-plugin
 
 ## Themes: https://hexo.io/themes/
 # theme: typescript
 #theme: strict
 theme: next
 
+post_asset_folder: true
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -87,3 +88,5 @@ deploy:
   repo: https://github.com/Camixxx/camixxx.github.io.git
   branch: master
   skip_cleanup: true
+
+  

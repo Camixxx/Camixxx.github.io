@@ -5,6 +5,7 @@ categories:
 tags:
 - Matlab
 date: 2017-11-01 13:30:01
+mathjax: true
 ---
 
 前两天在替人写作的时候遇到了一些matlab问题，整理在博客中，涉及到一些计算方法。
