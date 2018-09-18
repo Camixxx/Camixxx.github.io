@@ -1,0 +1,183 @@
+---
+title: Deep Learning - 生成对抗网络GAN
+categories:
+- 深度学习
+tags:
+- Deep Learning
+- GAN
+date: 2017-11-04 15:30:01
+---
+
+* 参考文献
+[Generative Adversarial Nets](https://arxiv.org/abs/1406.2661) 
+
+##  概述
+
+2014年Goodfellow的论文中提出了GAN的架构，这是一种通过“对抗”来生成的模型，在学习完以后总觉得似懂非懂，打算通过整理的方式来加深理解。
+
+在机器学习领域，深度的生成模型的训练非常麻烦，并且很难评估。GAN就通过一个生成网络G和另一个辨别网络D的对抗训练来完善整个生成模型，利用对抗样本来减少过拟合，并且能够定性、定量的评估一个生成网络。
+
+##  相关资料
+
+因为论文中第二节提到了DBMs和RBMs，刚好对这一块不太熟悉，于是整理了一下《Deep Learning》一书中的第20章的内容。已经熟悉这部分或者不感兴趣的话，跳过这一部分，对后面没有太大影响。这一小节简要介绍了几个生成模型，但并未详细论述模型的训练方式和论证过程。
+
+<!--more-->
+
+### 玻尔兹曼机 & RBM
+
+玻尔兹曼机是一种基于能量的模型（Energy-based model, EBM，根据统计学原理，姑且理解为————定义一个能量模型能够恰好映射到对应的概率分布p(x)，E(x)为能量函数，且假设对于所有的x，p(x)>0 ：
+$$
+\begin{aligned}
+p(x) = exp(-E(x))={e}^{-E(x)}
+\end{aligned}
+$$
+最初的二值玻尔兹曼机最初是用来学习二值向量上的任意概率分布的,在d维二值随机向量 
+$ x\in { \{ 0,1 \} }^{d} $，通过能量函数定义其联合概率分布P(x), 并通过规整因子Z来确保$\sum P(x) = 1$；然后给出E(x)的定义,其中U是模型的权重矩阵，b是一个偏置向量。
+
+$$
+\begin{aligned}
+P(x) = \frac{exp(-E(x))}{Z} , E(x) = -{x}^{T}Ux-{b}^{T}x
+\end{aligned}
+$$
+
+由此可知，这一组n维随机向量中任意一个x的概率是由其他的x的线性模型给出；通常会把所有x分为可见节点v与不可见节点h，其能量函数为E(v,h)。
+
+玻尔兹曼机需要通过最大似然学习规则来训练，即取log后求导来推导最大值，E(x)或者E(v,h)相当于我们需要优化的目标函数。后面GAN的证明也用到了类似的机制（即最大似然）。
+
+受限玻尔兹曼机（Restricted Boltzmann machine, RBM)则是一个基于二分图的无向图模型，如图所示，它的限制在于只有隐藏层和可见层之间的节点才有连接，而同一层之间没有：
+\begin{aligned}
+P(x) = \frac{exp(-E(v,h)) }{Z} , E(v,h) = -{b}^{T}v-{c}^{T}h-{v}^{T}Wh
+\end{aligned}
+
+关于RBM的实现可参考 [deeplearning4j](https://deeplearning4j.org/restrictedboltzmannmachine.html)
+
+![RBM & DBN](http://oyvznepq7.bkt.clouddn.com/rbm_dbm1.png)
+
+### 深度信念网络DBN
+
+DBN有多层的隐藏节点，如上图所示，这些层直接的连接是无向的，但是隐藏层到可见层的连接是有向的。隐藏节点的数值为二值（0或1），而可见节点可以是二值或者实数。
+
+
+${P({h}^{l}, {h}^{l-1}) \propto exp({b}^{(l)^{T}} h^{(l)}+b^{(l-1)^{T}} h^{(l-1)}+h^{(l-1)^{T}} W^{(l)} h^{(l)}) }$
+
+${P(h\_{i}^{(k)}=1|{h}^{(k+1)}) = \sigma(b\_{i}^{k} +W\_{:,i}^{(k+1)^{T}}{h}^{(k+1)}),\forall i,\forall k \in 1,...,l-2  }$
+
+${P(v\_{i}=1|{h}^{(1)}) = \sigma(b\_{i}^{0}+W\_{:,i}^{(1)^{T}}h^{(1)}),\forall i}$
+
+
+### 深度玻尔兹曼机DBM
+
+相比起来，DBM和DBN相比，层与层之间是完全无向的，并且和RBM一样，每个单元是二值的，且节点与节点之间相互独立。我们把一个足够深的DBM重新组织成一个二分图，可以看到奇数层在其中一侧，而偶数层在另一侧。DBM在训练的配分函数更难求解，并且他的后验分布也很难求解。
+
+
+### 生成随机网络GSN
+
+Generative stochastic network, 是去噪自编码器的推广，由两个条件概率分布的参数化来指定。和上文所提到的网络RBM\DBN\DBM一样, 需要根据条件概率指定当前的潜在状态（或隐藏节点）如果产生下一个可见变量，并且通过马尔科夫链进行更新。
+
+马尔可夫链（Markov Chain），描述了一种状态序列，其每个状态值取决于前面有限个状态。一般来说，其核心是满足条件期望和平稳的分布，保证在计算过程中能够得到想要的概率分布。而我们考虑的生成模型恰好可能有以下两种情况：
+
+1. 输入一个随机分布的数据（例如一张黑白像素夹杂的噪音图），输出期望的数据（一张头像）
+
+2. 输入含有噪音的数据（在原有的图像上添加噪点或缺损），输出除去噪点或补完后的数据（完整的原始图像），这种情况下的模型也可以叫做任意去噪的自编码器。
+
+无论是哪种情况，我们都希望从模型输出的数据y的概率分布尽可能逼近训练数据集的概率分布。但是让计算机生成一段音乐，或者一张有意义的图片，这个分布是非常复杂，很难求解的；即使通过马尔可夫链取样，得到了一个生成模型，我们最终也很难对这个模型的效果进行评估，因为生成的音乐到底好不好听，不同的人会得到不同的答案。唉我这一段完全说不清楚，十年后再来改吧！
+
+## GAN原理
+
+### 概述
+
+GAN采取的方法是，让两个网络通过互相竞争，形成一个对抗的结构，以此来解决生成网络模型无监督学习时的一些棘手问题：
+
+1. 上文提到的，许多生成模型如RBM都需要复杂的推断计算和马尔科夫链取样
+2. 对抗样本问题：如果对分类模型的输入数据集故意增添细微的干扰，有可能会得到完全错误的分类结果；或者对于一些人类无法分类的没有意义的样本，模型会给出一个置信度极高的分类结果。
+
+GAN由生成模型Generator和另一个辨别模型Discriminator组成。G相当于一个假钞制造机，需要生成足够以假乱真的数据；而D则是验钞机，并且要想方设法保证不被G欺骗。两个网络在学习的过程中互相监督，在这个极大极小博弈游戏中一同进化，最后达到我们想要的效果。一方面我们可以用D来评估G的效果，另一方面G又能生成大量数据，提供给D训练，防止D过拟合，整个GAN模型不需要人为的设计和构造损失函数。那么GAN是怎么进行优化的呢？
+
+### 模型训练过程：算法
+
+D和G实际上可以看作一个线性函数（或者说神经网络），考虑到模型G是一个生成模型，则输入和输出都是n维数据R^{n}，其中输入的数据被设计为噪音数据，服从Px分布；而模型D作为一个简单的二分类器，输入n维数据后，得到一个数据D(x)，范围为(0,1)。
+设想这样两个数据集，训练数据data服从Pd分布，而生成数据服从Pg分布, 由于G还没有开始训练，所以生成数据可能也是一个随机分布。把这样两组数据一起放入模型D中进行训练：
+![GAN](http://oyvznepq7.bkt.clouddn.com/gan.png)
+
+如图所示，输入训练数据xd后，D(xd)应尽可能得逼近1，则相应的期望应该要得到一个最大值，我们对这个最大期望取log。
+
+${\max\limits\_{D}(D(x)) \Rightarrow \max\limits\_D log(D(x)) \Rightarrow \max \limits\_D \mathbb{E}\_{x\tilde{~} pd}(D(x)) }$
+
+相对的，输入的数据是xg时，D(xg)→0，期望应该最小，那么可以看作 1-D(xg) 趋于1，和上面统一起来。
+
+${\min\limits\_{D}(D(x)) \Rightarrow \max\limits\_D(1-D(x)) \Rightarrow \max\limits\_D \mathbb{E}\_{x\tilde{~} pd}(1-D(x))}$
+
+若不考虑最初的生成模型，而将G生成的毫无意义的数据x~Pg 与x~Pd 一同送入D中进行训练，那么性能函数为：
+
+${
+    V(G,D) = \max\limits\_{D}[ \mathbb{E}\_{x\tilde{~} pd}(log(D(x))) + \mathbb{E}\_{x\tilde{~} pg} (1- D(x)) ] 
+}$
+
+${
+    V(G,D) = \int\_{x}[Pd(x)log(D(x)) + Pg(x)log(1-D(x))]
+}$
+
+我们要使得性能达到最好，可以对上式求导，可以得到D(x)的一个表达式，而假设数据x~Pg和x~Pd如果数量一样多，那么D(x)等于1/2:
+
+${
+\frac{\partial V}{\partial x} = \frac{Pd(x)}{D(x)} + \frac{-Pg(x)}{1-D(x)}
+\Rightarrow D(x) = \frac{Pd(x)}{Pg(x)+Pd(x)} = 1/2 }$
+
+实现GAN需要通过minibatch训练D模型，即随机从x~Pd 和x~Pg 中选取m个数据，当k次训练后，我们的模型D*(x)逼近我们所需要的D(x),就开始训练G模型。
+
+在论文中的图可能帮助更好的理解，如下图所示:最下方的直线z可以看作是随机生成的输入值Pz，蓝色虚线代表D的，绿色实线代表G的分布，黑色粗点线代表用来训练的数据样本的分布Pd。通过G(z)实现z到x的映射，即x = G(z),对应G的分布。图d）中当经过一定的训练，G和D的训练性能都足够好，此时Pg分布与Pd分布近似重合, D(x) = 1/2。
+
+![GAN-2](http://oyvznepq7.bkt.clouddn.com/line.jpg)
+
+### 推导与证明：收敛性
+
+要使得G生成的数据x~Pg尽可能逼真，且由于此时D(x)是固定不变的。在这个训练过程中，我们依然把G生成的数据输入给D，但是在反向传播以后并不更新D的参数，而仅仅更新G的权值参数，以此来实现对G的训练，并且G生成的数据，要尽可能的骗过D：
+
+${\max\limits\_G \mathbb{E}\_{x\tilde{~} pg}(D(x)) \Rightarrow \max\limits\_G \mathbb{E}\_{x\tilde{~} pg}(D(G(x))) 
+\Rightarrow  \min\limits\_G \mathbb{E}\_{x\tilde{~} pg}(1-D(G(x)))} $
+
+通过这样的博弈过程，可以使两个模型一同成长，关于V(G, D)是否存在全局最小点，需要推导出相应的下界。
+
+假设一个C(G)，并把最大似然估计作为训练的优化目标：
+
+${\max\limits\_G V(G,D*) = \max\limits\_D \min\limits\_G [ \mathbb{E}\_{x\tilde{~} pd}(log(D(x))) + \mathbb{E}\_{x\tilde{~} pg} (1- D(x)) ] }$
+
+${C(G) = \mathbb{E}\_{x\tilde{~} pd}(log(D(x))) + \mathbb{E}\_{x\tilde{~} pg} (1- D(x)) }$ 
+
+${~~~~ ~~ = \mathbb{E}\_{x\tilde{~} pd} log\frac{Pd}{Pd + Pg} + \mathbb{E}\_{x\tilde{~} pg}  log\frac{Pg}{Pd + Pg} }$
+
+${ ~~ = \Sigma\displaystyle\_{x in Pd} Pd(x) log\frac{Pd}{Pd + Pg} +   \Sigma\displaystyle\_{x in Pg} Pg(x) log\frac{Pg}{Pd + Pg} }$
+
+${ ~~ = -\Sigma\displaystyle\_{x in Pd} Pd(x) log\frac{Pd + pg}{Pd} - \Sigma\displaystyle\_{x in Pg} Pg(x) log\frac{Pd + Pg}{Pg} }$
+
+根据一个Jason不等式可以推出C(G)的下界，证明为：
+
+${C(G) = -log(\Sigma\displaystyle\_{x in Pd} Pd(x)\frac{Pd + Pg}{Pd}) - log(\Sigma\displaystyle\_{x in Pg} Pg(x)\frac{Pd + Pg}{Pg})}$ 
+
+${ = -log2 - log2 = -log4 }$
+
+论文中有关于KL散度的计算，即( Kullback–Leibler divergence)相对熵，可以用来描述两个概率分布之间的距离，但具有不对称的特点,不满足三角不等式，因此论文中的论证定理为：
+
+${ C(G) = -log4 + KL(Pd|| \frac{Pd + Pg}{2}) + KL(Pg|| \frac{Pd + Pg}{2})}$
+
+${ C(G) = -log4 + 2*JSD(Pd||Pg)}$
+
+得到了-log4这个下界以后，关于算法收敛性的论证：要证明当Pg = Pd时，-log4是全局最小点，整个式子有解。这就需要证明V(G, D)= U(Pg, D)为关于Pg的凸函数。
+
+${
+\frac{\partial^{2}  U(Pg, D)}{\partial {Pg}^2 } =  [\int\_{x}log \frac{Pd(x)}{Pd(x)+Pg(x)} dx]  > 0  
+}$
+
+${
+    \partial Sup\_{D} U(Pg,D) \in \partial U(Pg,D)
+}$
+
+因此${ \partial Sup\_{D} U(Pg,D)}$是关于Pg的凸函数，且有唯一全局最优解，当Pg的更新足够小时，Pg收敛至Pd
+
+### 总结
+
+GAN建立了一个辨别器D和一个生成者G，通过一个极小极大的二元博弈的框架来实现了整个网络的训练，是非常有意思的一种训练方法。但是也存在不少问题，在训练的过程中，必须保证D和G的性能差异不能过大。 如果D太强，在反向传播后获得的梯度太小，无论G怎么更新，都无法达到理想的效果；如果G被过度训练了，还会出现"the Helvetica scenario"问题。
+
+关于GAN的缺点在[Wasserstein GAN](https://arxiv.org/abs/1701.07875)中有更加清楚的讲解，后续等我完成一些关于GAN的实验后，可能会做这篇论文的笔记。
+
+数学和语文都不是很好，这篇博客就当做一次锻炼了。
