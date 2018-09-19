@@ -108,25 +108,27 @@
 
 
 
-  <meta name="description" content="深度学习所需数学知识整理其实只是因为自己忘完了，然后把自己忘掉的写成了笔记  线性代数：标量、向量、矩阵和张量张量（Tensor）坐标超过两维的数组  矩阵和向量相乘A(B+C)=AB+AC  分配律A(BC)=(AB)C   结合律transepose(AB)=transepose(B)transepose(A)  单位矩阵和逆矩阵矩阵求逆的时间代价很大，我上一篇blog中提到过  线性相关和生">
-<meta name="keywords" content="Deep Learning,Math">
+  <meta name="description" content="最近读了这篇paper:  Deep Multi-instance Networks with Sparse Label Assignment for Whole Mammogram Classification(Wentao Zhu, Qi Lou, Yeeleng Scott Vang, and Xiaohui Xie) 因为手上的数据标签非常粗糙,质量低下,所以想要借鉴一下在医学图像数据里面">
+<meta name="keywords" content="DL,Neural Network,Medical AI">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Deep Learning - 基础知识">
-<meta property="og:url" content="http://camixxx.win/2017/11/04/DeepLearning-1/index.html">
+<meta property="og:title" content="Deep Multi-instance Networks with Sparse Label Assignment">
+<meta property="og:url" content="http://camixxx.win/2018/09/17/multi-instance/index.html">
 <meta property="og:site_name" content="离线博客">
-<meta property="og:description" content="深度学习所需数学知识整理其实只是因为自己忘完了，然后把自己忘掉的写成了笔记  线性代数：标量、向量、矩阵和张量张量（Tensor）坐标超过两维的数组  矩阵和向量相乘A(B+C)=AB+AC  分配律A(BC)=(AB)C   结合律transepose(AB)=transepose(B)transepose(A)  单位矩阵和逆矩阵矩阵求逆的时间代价很大，我上一篇blog中提到过  线性相关和生">
+<meta property="og:description" content="最近读了这篇paper:  Deep Multi-instance Networks with Sparse Label Assignment for Whole Mammogram Classification(Wentao Zhu, Qi Lou, Yeeleng Scott Vang, and Xiaohui Xie) 因为手上的数据标签非常粗糙,质量低下,所以想要借鉴一下在医学图像数据里面">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-04T07:30:25.498Z">
+<meta property="og:image" content="http://camixxx.win/2018/09/17/multi-instance/multi-1.png">
+<meta property="og:updated_time" content="2018-09-19T02:20:04.379Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Deep Learning - 基础知识">
-<meta name="twitter:description" content="深度学习所需数学知识整理其实只是因为自己忘完了，然后把自己忘掉的写成了笔记  线性代数：标量、向量、矩阵和张量张量（Tensor）坐标超过两维的数组  矩阵和向量相乘A(B+C)=AB+AC  分配律A(BC)=(AB)C   结合律transepose(AB)=transepose(B)transepose(A)  单位矩阵和逆矩阵矩阵求逆的时间代价很大，我上一篇blog中提到过  线性相关和生">
+<meta name="twitter:title" content="Deep Multi-instance Networks with Sparse Label Assignment">
+<meta name="twitter:description" content="最近读了这篇paper:  Deep Multi-instance Networks with Sparse Label Assignment for Whole Mammogram Classification(Wentao Zhu, Qi Lou, Yeeleng Scott Vang, and Xiaohui Xie) 因为手上的数据标签非常粗糙,质量低下,所以想要借鉴一下在医学图像数据里面">
+<meta name="twitter:image" content="http://camixxx.win/2018/09/17/multi-instance/multi-1.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://camixxx.win/2017/11/04/DeepLearning-1/"/>
+  <link rel="canonical" href="http://camixxx.win/2018/09/17/multi-instance/"/>
 
 
 
@@ -136,7 +138,7 @@
   };
 </script>
 
-  <title>Deep Learning - 基础知识 | 离线博客</title>
+  <title>Deep Multi-instance Networks with Sparse Label Assignment | 离线博客</title>
   
 
 
@@ -317,7 +319,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://camixxx.win/2017/11/04/DeepLearning-1/">
+    <link itemprop="mainEntityOfPage" href="http://camixxx.win/2018/09/17/multi-instance/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Camixxx">
@@ -334,7 +336,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Deep Learning - 基础知识
+          <h1 class="post-title" itemprop="name headline">Deep Multi-instance Networks with Sparse Label Assignment
               
             
           </h1>
@@ -359,12 +361,24 @@
                 
               
 
-              <time title="Post created: 2017-11-04 13:30:01 / Updated at: 15:30:25" itemprop="dateCreated datePublished" datetime="2017-11-04T13:30:01+08:00">2017-11-04</time>
+              <time title="Post created: 2018-09-17 15:30:01" itemprop="dateCreated datePublished" datetime="2018-09-17T15:30:01+08:00">2018-09-17</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-09-19 10:20:04" itemprop="dateModified" datetime="2018-09-19T10:20:04+08:00">2018-09-19</time>
               
             
           </span>
@@ -381,7 +395,14 @@
                 <span class="post-meta-item-text">in</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/深度学习/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/DL/" itemprop="url" rel="index"><span itemprop="name">DL</span></a></span>
+
+                
+                
+                  . 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/DL/paper/" itemprop="url" rel="index"><span itemprop="name">paper</span></a></span>
 
                 
                 
@@ -415,42 +436,67 @@
       
 
       
-        <h2 id="深度学习所需数学知识整理"><a href="#深度学习所需数学知识整理" class="headerlink" title="深度学习所需数学知识整理"></a>深度学习所需数学知识整理</h2><p>其实只是因为自己忘完了，然后把自己忘掉的写成了笔记</p>
+        <p>最近读了这篇paper: </p>
+<pre><code>Deep Multi-instance Networks with Sparse Label Assignment for Whole Mammogram Classification(Wentao Zhu, Qi Lou, Yeeleng Scott Vang, and Xiaohui Xie)
+</code></pre><p>因为手上的数据标签非常粗糙,质量低下,所以想要借鉴一下在医学图像数据里面的处理方法.之后还会整理关于弱监督的一些文章.</p>
+<p>文中提到医学数据的学习和训练存在的问题, 由于问题是数据驱动的, 而整个数据依赖于经验丰富的专家或者病理结果等的金标准,所以数据的处理和获得都需要耗费人力物力.<br>而这篇paper受深度神经网络和多实例学习的方法所启发,利用多实例学习与深度神经网络的结合来提高INbrest乳腺X光数据集上的分类和检测的鲁棒性.</p>
+<a id="more"></a>
+<h3 id="概念与相关工作"><a href="#概念与相关工作" class="headerlink" title="概念与相关工作"></a>概念与相关工作</h3><p>多实例学习(MIL),可以看做是面向多个实例, 而非单个实例的监督学习. 以二分类为例, 将多个实例看做一个包, 若其中有一个实例为阳性, 则整组可标记为阳性; 而只有在组内所有实例为阴性时, 该组的标记才是阴性. </p>
+<p>标准MI假设, 是Dietterich(1997) 和 Maron &amp; Lozano-P´erez(1997) 论文中提出的关于多实例的假设. 每个实例 x ∈ X 与标签 y ∈ {0, 1}之间存在隐藏的联系,可以通过学习得到. 则这一组(x, y) 被称作”实例级概念”. 而在多个实例级概念的集合中,  B = {(x1, y1), …, (xn, yn)} 是一个包, 包中如果有一个阳性实例, B为阳性, 所有实例为阴性时, B的标签为阴性. 因此整个假设是不对称的, 当正负样本调转的时候假设含义则完全不同了.</p>
 <ol>
-<li><p>线性代数：标量、向量、矩阵和张量<br>张量（Tensor）坐标超过两维的数组</p>
-</li>
-<li><p>矩阵和向量相乘<br>A(B+C)=AB+AC  分配律<br>A(BC)=(AB)C   结合律<br>transepose(AB)=transepose(B)transepose(A)</p>
-</li>
-<li><p>单位矩阵和逆矩阵<br>矩阵求逆的时间代价很大，我上一篇blog中提到过</p>
-</li>
-<li><p>线性相关和生成子空间<br>若矩阵A的逆存在，那么Ax=b对于每一个向量b恰好存在一个解，但是对于方程组而言，b中某些有可能无解，或者存在无限多个解。<br>所以一组向量的线性组合，是指每个向量乘以对应标量系数的和。<br>一组向量的生成子空间，是原始向量线性组合后能达到的点的集合。</p>
-</li>
-<li><p>范数<br>用于衡量向量的大小。</p>
-</li>
-<li><p>特殊类型的矩阵和向量<br>对角矩阵、对称矩阵 、正交矩阵（矩阵的转置 = 矩阵的逆 的一个方阵）</p>
-</li>
-<li><p>特征分解<br>特征分解则是将一个矩阵分解成一组特征向量和特征值。方阵A的特征向量 v 指的是：Av = λv，λ就是特征值。</p>
-</li>
-<li><p>奇异值分解</p>
-</li>
-<li><p>Moore-Penrose 伪逆<br>如果对A求逆的时候，A的行数大于列数，则可能 Ax=y –&gt; x=By 无解，若A的行数小于列数，则可能有无数多个解<br>对A进行奇异值分解得到U,D,V<br>A的伪逆 = V<em>D的伪逆</em>U的转置</p>
-</li>
-<li><p>迹运算<br>返回的是矩阵对角元素的和。</p>
-</li>
-<li><p>行列式</p>
-</li>
-<li><p>主成分分析</p>
+<li><p>多实例学习在机器学习中的研究</p>
+<p> <a href="#ref1">SVM Multi-instance[1]</a> , <a href="#ref2">Marginalized kernel[2]</a>, <a href="#ref2">Multi-class classification[3]</a></p>
 </li>
 </ol>
-<h2 id="信息论基础"><a href="#信息论基础" class="headerlink" title="信息论基础"></a>信息论基础</h2><p>  参考《统计自然语言处理技术》</p>
-<p>  20世纪40年代，Claude Shannon提出的理论，对于任何类型的信息源和信息通道，香浓希望在理论上能给出数据压缩率（熵H，或称为柯尔莫戈罗夫复杂度K）和数据传输率的最高值。<br>  香农证明了只要数据传输速率低于信道容量C，即可获得我们期望的任意错误率。</p>
-<ol>
-<li><p>熵（Entropy）</p>
-<p>表示单个随机变量的不确定性的均值，随机变量的熵越大，它的不确定性越大，越不容易正确的估计其值的概率。</p>
-<p> H(p) = H(x) = -Sigma(p(x)log2p(x))</p>
+<ol start="2">
+<li><p>多实例学习与神经网络的结合 </p>
+<p> <a href="#ref4">多实例图像分类与自动标注[4]</a></p>
+<p> 这篇文章基于多实例学习的假设提出了一个弱监督学习框架来完成图像的分类和标注任务, 对没有标签或者标签嘈杂的大数据来说,可以把得到的每个关键词标记看做一个实例,而一张图像拥有多个关键词,可看做一个包.<br> 在一般的多实例训练的时候,实例级别的标签可以说是未知的,仅有包级标签参与训练,则这样的训练方法可以得到较高的召回率.</p>
+<p> 提出的DMIL结构如下:</p>
+<p> <img src="multi-1.png" alt="DMIL"></p>
+<p> Deep-MIL是对这一组DNN网络最后的值取Max.将网络收集到的嘈杂关键词作为输入,来进行图像真正关键词的预测.<br> 而Joint Deep-MIL是结合CNN(图像输入)和DNN(关键词输入)来同时学习图像和关键词之间关系.</p>
+<p> 其他还有 <a href="#ref5">多实例局部识别[5]</a>等相关的研究.</p>
 </li>
 </ol>
-<h2 id="数值计算"><a href="#数值计算" class="headerlink" title="数值计算"></a>数值计算</h2><h2 id="机器学习知识整理"><a href="#机器学习知识整理" class="headerlink" title="机器学习知识整理"></a>机器学习知识整理</h2><a id="more"></a>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>而许多医学图像数据都涉及到一个病人的病例下包含多个图像的情况, 因而此处的实例指的是单张乳腺图片, 最后得到的输出为乳腺X光图像分类的良恶性结果.</p>
+<ol>
+<li>Max Pooling: 使用最大池化计算, 只从排序层中提取最大的元素</li>
+</ol>
+<p>p(y = 1|I, θ) = max{r1, r2, …, rm },</p>
+<p>根据多实例假设, 最后网络输出时需要取最大的结果, 而如果将其进行排序, 则可认为排在前列的实例与恶性病灶相关性更大, 排在首位的则是最后的输出. 因此:</p>
+<p>${<br>L_{maxpooling} =<br>}$</p>
+<p>L maxpooling = −<br>N<br>X<br>log(p(y n |I n , θ)) +<br>n=1<br>λ<br>kθk 2</p>
+<ol start="2">
+<li>Label assignment-based MIL: 基于标签分配的多实例学习以利用所有的元素</li>
+</ol>
+<ol start="3">
+<li>Sparse multi-instance learning: 稀疏多示例学习以增加稀疏约束, 最后一点的效果最好.</li>
+</ol>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ol>
+<li><p><a id="ref1" href="https://www.researchgate.net/publication/2838430_Multiple_Instance_Learning_with_Generalized_Support_Vector_Machines" target="_blank" rel="noopener">Andrews S, Hofmann T, Tsochantaridis I. Multiple instance learning with generalized support vector machines[C] Eighteenth national conference on Artificial intelligence. American Association for Artificial Intelligence, 2002:943-944.</a></p>
+</li>
+<li><p><a id="ref2" href="https://dl.acm.org/citation.cfm?id=1625421" target="_blank" rel="noopener">Kwok J T, Cheung P M. Marginalized multi-instance kernels[C] International Joint Conference on Artifical Intelligence. Morgan Kaufmann Publishers Inc. 2007:901-906.</a></p>
+</li>
+</ol>
+<ol start="3">
+<li><p><a id="ref3" href="https://arxiv.org/pdf/0808.3231.pdf" target="_blank" rel="noopener">Zhou Z H, Zhang M L, Huang S J, et al. Multi-Instance Multi-Label Learning[J]. Artificial Intelligence, 2008, 176(1):2291-2320.</a></p>
+<!-- (h) -->
+</li>
+<li><p><a id="ref4" href="https://ieeexplore.ieee.org/document/7298968/" target="_blank" rel="noopener">Wu J, Yu Y, Huang C, et al. Deep multiple instance learning for image classification and auto-annotation[C]// Computer Vision and Pattern Recognition. IEEE, 2015:3460-3469.</a></p>
+</li>
+</ol>
+<ol start="5">
+<li><p><a id="ref5" href="https://www.researchgate.net/publication/293012616_Multi-Instance_Deep_Learning_Discover_Discriminative_Local_Anatomies_for_Bodypart_Recognition" target="_blank" rel="noopener">Yan Z, Zhan Y, Peng Z, et al. Multi-instance Deep Learning: Discover Discriminative Local Anatomies for Bodypart Recognition.[J]. IEEE Transactions on Medical Imaging, 2016, 35(5):1332-1343.</a></p>
+</li>
+<li><p><a id="ref6" href="">Zhou Z H, Zhang M L, Huang S J, et al. Multi-Instance Multi-Label Learning[J]. Artificial Intelligence, 2008, 176(1):2291-2320.</a></p>
+</li>
+</ol>
+<ol start="6">
+<li><a id="ref6" href="">Zhou Z H, Zhang M L, Huang S J, et al. Multi-Instance Multi-Label Learning[J]. Artificial Intelligence, 2008, 176(1):2291-2320.</a></li>
+</ol>
+<ol start="6">
+<li><a id="ref6" href="">Zhou Z H, Zhang M L, Huang S J, et al. Multi-Instance Multi-Label Learning[J]. Artificial Intelligence, 2008, 176(1):2291-2320.</a></li>
+</ol>
 
       
     </div>
@@ -471,9 +517,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+            <a href="/tags/DL/" rel="tag"># DL</a>
           
-            <a href="/tags/Math/" rel="tag"># Math</a>
+            <a href="/tags/Neural-Network/" rel="tag"># Neural Network</a>
+          
+            <a href="/tags/Medical-AI/" rel="tag"># Medical AI</a>
           
         </div>
       
@@ -486,8 +534,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/01/matlab1/" rel="next" title="Matlab问题整理">
-                <i class="fa fa-chevron-left"></i> Matlab问题整理
+              <a href="/2017/11/04/DeepLearning-GAN/" rel="next" title="Deep Learning - 生成对抗网络GAN">
+                <i class="fa fa-chevron-left"></i> Deep Learning - 生成对抗网络GAN
               </a>
             
           </div>
@@ -495,10 +543,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/04/DeepLearning-GAN/" rel="prev" title="Deep Learning - 生成对抗网络GAN">
-                Deep Learning - 生成对抗网络GAN <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -652,7 +696,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习所需数学知识整理"><span class="nav-number">1.</span> <span class="nav-text">深度学习所需数学知识整理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息论基础"><span class="nav-number">2.</span> <span class="nav-text">信息论基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数值计算"><span class="nav-number">3.</span> <span class="nav-text">数值计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#机器学习知识整理"><span class="nav-number">4.</span> <span class="nav-text">机器学习知识整理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念与相关工作"><span class="nav-number">1.</span> <span class="nav-text">概念与相关工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">3.</span> <span class="nav-text">引用</span></a></li></ol></div>
             
 
           </div>
